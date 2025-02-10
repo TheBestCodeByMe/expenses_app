@@ -1,3 +1,4 @@
+import 'package:expenses_app/widgets/chart/chart.dart';
 import 'package:expenses_app/widgets/expenses_list/expenses_list.dart';
 import 'package:expenses_app/models/expense.dart';
 import 'package:expenses_app/widgets/new_expense.dart';
@@ -49,6 +50,7 @@ class _ExpensesState extends State<Expenses> {
     setState(() {
       _registeredExpenses.remove(expense);
     });
+    ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         duration: const Duration(seconds: 3),
@@ -93,7 +95,7 @@ class _ExpensesState extends State<Expenses> {
       ),
       body: Column(
         children: [
-          const Text('The chart'),
+          Chart(expenses: _registeredExpenses),
           Expanded(
             child: mainContent,
           ),
