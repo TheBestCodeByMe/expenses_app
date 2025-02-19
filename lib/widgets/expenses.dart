@@ -23,7 +23,7 @@ class _ExpensesState extends State<Expenses> {
     ),
     Expense(
       title: 'Cinema',
-      amount: 15,
+      amount: 15.69,
       date: DateTime.now(),
       category: Category.leisure,
     ),
@@ -31,11 +31,10 @@ class _ExpensesState extends State<Expenses> {
 
   void _openAddExpenseOverlay() {
     showModalBottomSheet(
+      useSafeArea: true,
       isScrollControlled: true,
       context: context,
-      builder: (ctx) => NewExpense(
-        onAddExpense: _addExpense,
-      ),
+      builder: (ctx) => NewExpense(onAddExpense: _addExpense),
     );
   }
 
@@ -59,10 +58,7 @@ class _ExpensesState extends State<Expenses> {
           label: 'Undo',
           onPressed: () {
             setState(() {
-              _registeredExpenses.insert(
-                expenseIndex,
-                expense,
-              );
+              _registeredExpenses.insert(expenseIndex, expense);
             });
           },
         ),
@@ -72,6 +68,8 @@ class _ExpensesState extends State<Expenses> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
     Widget mainContent = const Center(
       child: Text('No expenses found. Start adding some!'),
     );
@@ -85,7 +83,7 @@ class _ExpensesState extends State<Expenses> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Fluter ExpenseTracker'),
+        title: const Text('Flutter ExpenseTracker'),
         actions: [
           IconButton(
             onPressed: _openAddExpenseOverlay,
@@ -93,14 +91,23 @@ class _ExpensesState extends State<Expenses> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Chart(expenses: _registeredExpenses),
-          Expanded(
-            child: mainContent,
-          ),
-        ],
-      ),
+      body: width < 600
+          ? Column(
+              children: [
+                Chart(expenses: _registeredExpenses),
+                Expanded(
+                  child: mainContent,
+                ),
+              ],
+            )
+          : Row(children: [
+              Expanded(
+                child: Chart(expenses: _registeredExpenses),
+              ),
+              Expanded(
+                child: mainContent,
+              ),
+            ]),
     );
   }
 }
